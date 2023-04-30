@@ -1,11 +1,24 @@
 
 class PWCVScene extends Phaser.Scene
 {
+
     preload ()
     {
         this.load.image("ground","Assets/topground.png");
         this.load.image("sky","Assets/background.png");
         this.load.image("apple","Assets/apple.png");
+        this.load.image("sign1","Assets/sign1.png");
+        this.load.image("sign2","Assets/sign2.png");
+        this.load.image("monitor","Assets/monitor.png");
+        this.load.image("tree1","Assets/tree1.png");
+        this.load.image("rock","Assets/rock.png");
+        this.load.image("button","Assets/button-bg.png");
+        this.load.image("intro","Assets/intro.png");
+        this.load.image("crate","Assets/crate.png");
+        this.load.image("cloud1","Assets/cloud1.png");
+        this.load.image("cloud2","Assets/cloud2.png");
+        this.load.image("cloud3","Assets/cloud3.png");
+        this.load.image("about","Assets/title-about.png");
         this.load.spritesheet("dude","Assets/dude.png",{frameWidth:32,frameHeight:48});
 
         this.load.image("ray","Assets/ray.png");
@@ -13,8 +26,44 @@ class PWCVScene extends Phaser.Scene
 
     create ()
     {
-        const W = game.config.width;
+        const W = 4000;
         const H = game.config.height;
+
+        this.add.sprite(256,H-256, 'intro');
+        this.add.sprite(768,H-64, 'about');
+        this.add.sprite(1200,H-64, 'rock');
+        this.add.sprite(1000,H-200, 'tree1');
+
+        const cloud1 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud1');
+        const cloud2 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud2');
+        const cloud3 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud3');
+
+        this.tweens.add({
+            targets: cloud1,
+            x: 4000,
+            duration: Phaser.Math.Between(20000,50000),
+            yoyo: false,
+            ease: 'Linear',
+            repeat: -1
+        });
+
+        this.tweens.add({
+            targets: cloud2,
+            x: 4000,
+            duration: Phaser.Math.Between(20000,50000),
+            yoyo: false,
+            ease: 'Linear',
+            repeat: -1
+        });
+
+        this.tweens.add({
+            targets: cloud3,
+            x: 4000,
+            duration: Phaser.Math.Between(20000,50000),
+            yoyo: false,
+            ease: 'Linear',
+            repeat: -1
+        });
 
         //add tilesprites
         let ground = this.add.tileSprite(0,H-64,W,128,'ground');
@@ -55,7 +104,7 @@ class PWCVScene extends Phaser.Scene
             repeat : -1
         });
 
-        this.player = this.physics.add.sprite(100,100,'dude',4);
+        this.player = this.physics.add.sprite(50,50,'dude',4);
         console.log(this.player);
         //set the bounce values
         this.player.setBounce(0);
@@ -86,10 +135,14 @@ class PWCVScene extends Phaser.Scene
         //Add a group of apples = physical objects
         let fruits = this.physics.add.group({
             key: "apple",
-            repeat : 8,
+            repeat : 15,
             setScale : {x:0.2,y:0.2},
             setXY : {x:10,y:0,stepX:100},
         });
+
+        let sign = this.physics.add.sprite(1024,0,'sign1')
+        sign.setBounce(Phaser.Math.FloatBetween(0.4,0.7));
+        this.physics.add.collider(platforms,sign);
 
         //add bouncing effect to all the apples
         fruits.children.iterate(function(f){
@@ -113,15 +166,14 @@ class PWCVScene extends Phaser.Scene
 
     update ()
     {
-        const p = this.input.activePointer;
+        var p = this.input.activePointer;
+        var direction = p.positionToCamera(this.cameras.main).x - this.player.x
 
-        var direction = p.x - this.player.x
-
-        if(this.cursors.left.isDown || (direction < 0 & this.input.activePointer.isDown)){
+        if(this.cursors.left.isDown || (direction < 0 && p.isDown)){
             this.player.setVelocityX(-player_config.player_speed);
             this.player.anims.play('left',true);
         }
-        else if(this.cursors.right.isDown || (direction > 0 & this.input.activePointer.isDown)){
+        else if(this.cursors.right.isDown || (direction > 0 && p.isDown)){
             this.player.setVelocityX(player_config.player_speed);
             this.player.anims.play('right',true);
         }
@@ -131,7 +183,7 @@ class PWCVScene extends Phaser.Scene
         }
 
         //add jumping ability , stop the player when in air
-        if(this.cursors.up.isDown && this.player.body.touching.down){
+        if((this.cursors.up.isDown || (p.getAngle() < 0 && p.isDown)) && this.player.body.touching.down){
             this.player.setVelocityY(player_config.player_jumpspeed);
         }
     }
@@ -170,6 +222,6 @@ const config = {
 const game = new Phaser.Game(config);
 
 let player_config = {
-    player_speed : 150,
+    player_speed : 450,
     player_jumpspeed : -700,
 }
