@@ -1,6 +1,7 @@
 
 class PWCVScene extends Phaser.Scene
 {
+    skillsText;
 
     preload ()
     {
@@ -11,15 +12,17 @@ class PWCVScene extends Phaser.Scene
         this.load.image("sign2","Assets/sign2.png");
         this.load.image("monitor","Assets/monitor.png");
         this.load.image("tree1","Assets/tree1.png");
+        this.load.image("tree2","Assets/tree2.png");
         this.load.image("rock","Assets/rock.png");
-        this.load.image("button","Assets/button-bg.png");
         this.load.image("intro","Assets/intro.png");
         this.load.image("crate","Assets/crate.png");
         this.load.image("cloud1","Assets/cloud1.png");
         this.load.image("cloud2","Assets/cloud2.png");
         this.load.image("cloud3","Assets/cloud3.png");
         this.load.image("about","Assets/title-about.png");
+        this.load.image("skills","Assets/title-skills.png");
         this.load.spritesheet("dude","Assets/dude.png",{frameWidth:32,frameHeight:48});
+        this.load.spritesheet("man","Assets/man.png",{frameWidth:55,frameHeight:210});
 
         this.load.image("ray","Assets/ray.png");
     }
@@ -29,14 +32,53 @@ class PWCVScene extends Phaser.Scene
         const W = 4000;
         const H = game.config.height;
 
-        this.add.sprite(256,H-256, 'intro');
-        this.add.sprite(768,H-64, 'about');
-        this.add.sprite(1200,H-64, 'rock');
-        this.add.sprite(1000,H-200, 'tree1');
-
         const cloud1 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud1');
         const cloud2 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud2');
         const cloud3 = this.add.image(-500, H - Phaser.Math.Between(400,450), 'cloud3');
+
+        this.add.sprite(220,H-256, 'intro');
+        this.add.sprite(300,H-96, 'sign2');
+        this.add.sprite(480,H-200, 'tree2');
+        this.add.sprite(512,H-210, 'tree1');
+        this.add.sprite(768,H-64, 'about');
+        this.text = this.add.text(1490, H-520, ['ML Specialist'], { font: '24px Arial Black', fill: '#ffffff' ,});
+        this.text = this.add.text(1170, H-110, ['Beginner'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-187, ['Elementary'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-151, ['_______________________________________________________________________________________________________'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-264, ['Intermediate'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-228, ['_______________________________________________________________________________________________________'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-344, ['Advanced'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-305, ['_______________________________________________________________________________________________________'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-421, ['Expert'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1170, H-382, ['_______________________________________________________________________________________________________'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.text = this.add.text(1250, H-481, ['Machine Learning/','Modelling'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.add.sprite(1330,H-96,"crate");
+        this.add.sprite(1330,H-173,"crate");
+        this.add.sprite(1330,H-250,"crate");
+        this.add.sprite(1330,H-327,"crate");
+        this.add.sprite(1330,H-404,"crate");
+        this.text = this.add.text(1430, H-481, ['Data Engineering'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.add.sprite(1500,H-96,"crate");
+        this.add.sprite(1500,H-173,"crate");
+        this.add.sprite(1500,H-250,"crate");
+        this.add.sprite(1500,H-327,"crate");
+        this.text = this.add.text(1610, H-481, ['Business Analysis'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.add.sprite(1690,H-96,"crate");
+        this.add.sprite(1690,H-173,"crate");
+        this.add.sprite(1690,H-250,"crate");
+        this.add.sprite(1690,H-327,"crate");
+        this.text = this.add.text(1790, H-481, ['Solution Architecture'], { font: '16px Arial Black', fill: '#ffffff' });
+        this.add.sprite(1870,H-96,"crate");
+        this.add.sprite(1870,H-173,"crate");
+        this.add.sprite(1870,H-250,"crate");
+        this.add.sprite(1870,H-327,"crate");
+        this.add.sprite(100,H-85, 'rock');
+        this.add.sprite(2500,H-200, 'tree2');
+        this.add.sprite(2600,H-200, 'tree2');
+        this.add.sprite(2700,H-210, 'tree1');
+        this.add.sprite(2200,H-64, 'skills');
+        this.add.sprite(2424,H-64, 'rock');
+        this.add.sprite(3200,H-75, 'rock');
 
         this.tweens.add({
             targets: cloud1,
@@ -104,7 +146,7 @@ class PWCVScene extends Phaser.Scene
             repeat : -1
         });
 
-        this.player = this.physics.add.sprite(50,50,'dude',4);
+        this.player = this.physics.add.sprite(50,H-96,'dude',4);
         console.log(this.player);
         //set the bounce values
         this.player.setBounce(0);
@@ -141,7 +183,7 @@ class PWCVScene extends Phaser.Scene
         });
 
         let sign = this.physics.add.sprite(1024,0,'sign1')
-        sign.setBounce(Phaser.Math.FloatBetween(0.4,0.7));
+        sign.setBounce(0.1);
         this.physics.add.collider(platforms,sign);
 
         //add bouncing effect to all the apples
@@ -195,12 +237,12 @@ class PWCVScene extends Phaser.Scene
 
 
 const config = {
-    type:Phaser.AUTO,
+    type:Phaser.FIT,
     width: window.innerWidth,
     height: window.innerHeight,
 
     scale:{
-        mode: Phaser.Scale.SHOW_ALL,
+        mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
 
@@ -222,6 +264,6 @@ const config = {
 const game = new Phaser.Game(config);
 
 let player_config = {
-    player_speed : 450,
+    player_speed : 585,
     player_jumpspeed : -700,
 }
